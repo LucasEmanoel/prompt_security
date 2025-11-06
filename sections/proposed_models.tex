@@ -2,7 +2,7 @@
   \small 
   \renewcommand{\arraystretch}{1.3}
   \setlength{\extrarowheight}{2pt}
-  \caption{Comparison of Related Works on LoRa}
+  \caption{Comparação de trabalhos relacionados a Prompt Security}
   \label{tab:related_works}
   \begin{tabularx}{\textwidth}{
       >{\raggedright\arraybackslash}p{0.15\textwidth}
@@ -21,6 +21,18 @@
       &  (1) auROC (Area Under the Receiver Operator Characteristic Curve) e (2) auPRC (Area Under the Precision-Recall Curve).
       & Falta de profundidade no que tange a ataques de backdoor mais complexos ou ofuscados, gerando falsos positivos. \\
     \midrule
+      Benjamin, Victoria \emph{et al.} \cite{benjamin2024}
+      & Análise sistemática da vulnerabilidade de 36 LLMs a ataques de injeção de prompt focados em gerar código de keylogger.
+      & 4 prompts de injeção direta contra 36 LLMs. Análise estatística (Correlação, Random Forest, SHAP, PCA).
+      & (1) Taxa de sucesso (2) Importância de features. (3) Correlação entre prompts.
+      & Necessidade de testes multilíngues, múltiplas etapas de complexidade. \\
+    \midrule
+      Sebastian, Glorin. \cite{Sebastian2023SecurityUserInformation:}
+      & Investigar a proteção de dados e privacidade em chatbots (foco no ChatGPT). Avaliar Tecnologias de Aprimoramento de Privacidade (PETs).
+      & Revisão da literatura, análise de técnicas (ex: privacidade diferencial) e uma pesquisa (survey) com 177 usuários.
+      & Métricas de percepção da pesquisa: (1) Nível de preocupação, (2) Disposição para sacrificar desempenho, (3) Consciência sobre vazamentos.
+      & Análise de riscos à privacidade, preocupação dos usuários através de pesquisas. \\
+    \midrule
     \textbf{This Work}
       & \textbf{}
       & \textbf{}
@@ -32,3 +44,4 @@
 
 \section{Proposed Model}
 \label{sec:proposed_model}
+Proposed model text goes here.
