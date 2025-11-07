@@ -1,0 +1,76 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{graphicx}
+\usepackage{svg}    
+\usepackage{amssymb}
+\graphicspath{{img/}}
+\usepackage{booktabs}
+\usepackage{array}  
+\usepackage{rotating}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{soul}
+\usepackage{amsmath} 
+\usepackage[section]{placeins}       
+
+\usepackage{xcolor}              
+\definecolor{linkblue}{HTML}{1B458F}
+
+\usepackage[
+  colorlinks=false,
+  linkcolor=linkblue,
+  citecolor=black,
+  urlcolor=linkblue,             
+  pdfborder={0 0 0},             
+  breaklinks=true,               
+  hidelinks                      
+]{hyperref}
+\usepackage{comment}
+% \usepackage{stfloats}
+\begin{document}
+
+\title{Title}
+
+\author{nomes,~\IEEEmembership{Member,~IEEE}}
+
+\thanks{}
+\thanks{}
+\thanks{}% <-this % stops a space
+\thanks{}%; revised November xx, 2025.}
+
+
+\maketitle
+
+\begin{abstract}
+\end{abstract}
+
+\begin{IEEEkeywords}
+Palavras Chaves
+\end{IEEEkeywords}
+
+% Abstract - ✅ 16/09/2025
+
+\IEEEpeerreviewmaketitle
+
+\input{sections/introduction}
+% Introduction - ✅ 17/09/2025
+
+\input{sections/background}
+% Background - ✅ 17/09/2025
+
+\input{sections/related}
+% Related Works - ✅ 18/09/2025
+
+\input{sections/architecture}
+% Architecture - ✅ 18/09/2025
+
+\input{sections/proposed_models}
+% Architecture - ✅ 18/09/2025
+
+\input{sections/results}
+\input{sections/conclusions}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references} 
+
+\end{document}
