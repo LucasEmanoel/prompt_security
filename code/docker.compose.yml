@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+
+  sanitizer:
+    build: ./sanitizer
+    container_name: sanitizer_service
+    ports:
+      - "8000:8000"
+    networks:
+      - llm_net
+
+  orchestrator:
+    build: ./orchestrator
+    container_name: orchestrator_service
+    depends_on:
+      - sanitizer
+    ports:
+      - "7000:7000"
+    networks:
+      - llm_net
+
+networks:
+  llm_net:
+    driver: bridge
