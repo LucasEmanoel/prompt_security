@@ -20,6 +20,14 @@ services:
     networks:
       - llm_net
 
+  guardrail:
+    build: ./guardrail
+    container_name: output_guardrail_service
+    ports:
+      - "6000:6000"
+    networks:
+      - llm_net
+
 networks:
   llm_net:
     driver: bridge
