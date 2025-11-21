@@ -6,9 +6,9 @@ router = APIRouter()
 
 @router.post("/sanitize")
 def sanitize_prompt(req: PromptRequest):
+    """
+    Limpa e normaliza o prompt (remove caracteres invisíveis, unicode, etc).
+    Não faz validação de segurança - isso é responsabilidade do GuardRail.
+    """
     cleaned, status = sanitize(req.prompt)
-
-    if status == "blocked":
-        return {"status": "blocked", "reason": "Prompt injection detected"}
-
     return {"status": "ok", "clean_prompt": cleaned}
