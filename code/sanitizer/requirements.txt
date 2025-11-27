@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+regex
+pytest
+pytest-asyncio
+httpx
