@@ -36,6 +36,14 @@ services:
     networks:
       - llm_net
 
+  output_guardrail:
+    build: ./output_guardrail
+    container_name: output_guardrail_service
+    ports:
+      - "4000:4000"
+    networks:
+      - llm_net
+
 networks:
   llm_net:
     driver: bridge
