@@ -24,7 +24,7 @@ O projeto está organizado nas seguintes pastas principais:
 
 ```
 /
-├── 📄 artigo/
+├── 📄 sections/
 │   └── (Artigo científico do projeto em formato LaTeX)
 │
 ├── 💻 code/
@@ -32,7 +32,7 @@ O projeto está organizado nas seguintes pastas principais:
 │   ├── sanitizer/        (Microsserviço do Sanitizador) 
 │   └── guardrail/        (Microsserviço do Output Guardrail) 
 │
-├── 📊 apresentacoes/
+├── 📊 activity/
 │   └── (Slides e materiais de apresentação do projeto)
 │
 └── README.md
