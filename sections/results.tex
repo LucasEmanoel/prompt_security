@@ -1,2 +1,86 @@
 \section{Resultados}
+
+Os experimentos conduzidos permitiram avaliar a eficácia da arquitetura proposta para segurança de prompts em modelos de linguagem de grande escala (LLMs). Os resultados foram obtidos a partir de testes unitários, testes de integração e validações comportamentais específicas para diferentes classes de ataques, conforme documentado durante o desenvolvimento do projeto.
+
+\subsection{Efetividade Geral da Arquitetura}
+
+A integração entre os três componentes principais --- \textit{Sanitizer}, \textit{Output Guardrail} e \textit{Orchestrator} --- mostrou-se consistente e robusta. Os testes confirmam que o sistema é capaz de:
+
+\begin{itemize}
+    \item bloquear tentativas de \textit{prompt injection}, tanto diretas quanto discretas;
+    \item mitigar vieses explícitos e implícitos no texto de entrada;
+    \item detectar e impedir alucinações (\textit{hallucinations}) nas saídas geradas pelo LLM;
+    \item remover ou anonimizar dados sensíveis antes que a resposta seja enviada ao usuário.
+\end{itemize}
+
+\subsection{Avaliação do Sanitizador}
+
+O módulo de sanitização foi submetido a 11 testes unitários distintos, todos aprovados. Os resultados demonstram que:
+
+\begin{itemize}
+    \item caracteres invisíveis, ilegais ou utilizados em ataques foram corretamente removidos;
+    \item a estrutura original do texto é preservada sempre que possível;
+    \item estratégias de manipulação semântica e escapes utilizados em ataques de \textit{injection} foram neutralizados.
+\end{itemize}
+
+Esses resultados confirmam que o sanitizador cumpre seu papel como primeira linha de defesa no fluxo de requisições.
+
+\subsection{Desempenho dos Guardrails}
+
+O módulo de \textit{Output Guardrail} apresentou 22 testes unitários, todos aprovados. Os resultados demonstram capacidade sólida de:
+
+\begin{itemize}
+    \item detectar vieses relacionados a gênero, raça, política e etnia;
+    \item bloquear tentativas de modificação do comportamento do modelo através de engenharia adversarial;
+    \item identificar padrões de delírio factual produzidos pelo LLM;
+    \item aplicar regras de conformidade e políticas de segurança pré-estabelecidas.
+\end{itemize}
+
+Os testes específicos de bloqueio mostraram que o sistema retorna adequadamente respostas de erro (\texttt{400 Bad Request}) quando necessário, preservando a integridade da interação.
+
+\subsection{Confiabilidade do Orquestrador}
+
+O \textit{Orchestrator Service} apresentou taxa de aprovação de 92\% nos testes unitários: 11 testes bem-sucedidos e 1 falha relacionada ao modelo de validação da requisição. Ainda assim, os testes de integração indicaram que o fluxo completo do sistema permaneceu funcional e livre de falhas críticas.
+
+Esse resultado demonstra que o orquestrador é confiável, embora precise de refinamentos adicionais no esquema de validação de entrada.
+
+\subsection{Testes de Integração}
+
+Os testes de integração executados via Postman totalizaram 17 casos, todos aprovados. Eles abrangem:
+
+\begin{itemize}
+    \item requisições contendo tentativas explícitas de injeção;
+    \item entradas com dados sensíveis (CPF, e-mail), verificando anonimização;
+    \item respostas contendo delírios ou inconsistências;
+    \item verificação de vieses na entrada;
+    \item falhas intencionais simulando comportamento adversarial.
+\end{itemize}
+
+A cobertura geral alcançou 100\%, demonstrando que os microsserviços operam de forma harmônica sob condições adversas.
+
+\subsection{Desempenho}
+
+Os tempos de resposta registrados refletem a complexidade de cada módulo:
+
+\begin{itemize}
+    \item sanitização simples: entre 1 e 4 segundos;
+    \item detecção de vieses: entre 3 e 8 segundos;
+    \item depuração de alucinações em saídas do LLM: entre 6 e 10 segundos.
+\end{itemize}
+
+Apesar da variação, o desempenho é adequado para o escopo experimental do projeto. Futuras otimizações poderão reduzir a latência, principalmente no módulo de verificação pós-LLM.
+
+\subsection{Conclusão Parcial dos Resultados}
+
+Os testes realizados demonstram que a arquitetura desenvolvida:
+
+\begin{itemize}
+    \item é tecnicamente viável;
+    \item apresenta proteção efetiva contra ataques reais;
+    \item garante conformidade e segurança robusta nas interações com LLMs;
+    \item possui espaço para aprimoramentos na validação do orquestrador e otimizações de desempenho.
+\end{itemize}
+
+Assim, os resultados confirmam que o sistema atende aos objetivos propostos e constitui uma base sólida para mecanismos avançados de segurança em ambientes que utilizam modelos de linguagem.
+
 \label{sec:resultados_finais}
