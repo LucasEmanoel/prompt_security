@@ -14,7 +14,7 @@ BANNED_KEYWORDS = ["bomb", "explosive", "hack", "ddos", "malware", "virus"]
 INJECTION_PATTERNS = [
     r"ignore.*(instruções|instructions|instrucoes|prompts?)",
     r"revele.*(seu|o|your)?\s*(prompt|sistema|system)",
-    r"reveal.*(your|the)?\s*(prompt|system)"
+    r"reveal.*?(?:your|the)?\s*(?:prompt|system)",
     r"jailbreak",
     r"bypass",
     r"você agora (é|sera|vai ser)",
