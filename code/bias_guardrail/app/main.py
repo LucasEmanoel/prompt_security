@@ -3,14 +3,14 @@ from pydantic import BaseModel
 from guardrails.hub import BiasCheck
 from guardrails import Guard
 
-app = FastAPI(title="Output GuardRail Microservice")
+app = FastAPI(title="Bias GuardRail Microservice")
 
 class PromptRequest(BaseModel):
     prompt: str
 
 @app.get("/")
 def root():
-    return {"message": "Output GuardRail running", "status": "healthy"}
+    return {"message": "Bias GuardRail running", "status": "healthy"}
 
 @app.post("/validate")
 async def validate(data: PromptRequest):

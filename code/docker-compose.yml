@@ -22,9 +22,17 @@ services:
 
   guardrail:
     build: ./guardrail
-    container_name: output_guardrail_service
+    container_name: guardrail_service
     ports:
       - "6000:6000"
+    networks:
+      - llm_net
+
+  bias_guardrail:
+    build: ./bias_guardrail
+    container_name: bias_guardail_service
+    ports:
+      - "5000:5000"
     networks:
       - llm_net
 
