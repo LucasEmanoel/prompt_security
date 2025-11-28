@@ -72,10 +72,6 @@ A arquitetura de microsserviços é gerenciada com Docker Compose, facilitando a
 
 -----
 
-Aqui está uma versão **bem mais resumida**, direta e adequada para o README:
-
----
-
 # 🧪 Como Executar os Testes
 
 ## 1. Testes Unitários
