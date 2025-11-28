@@ -8,7 +8,6 @@ router = APIRouter()
 def sanitize_prompt(req: PromptRequest):
     """
     Limpa e normaliza o prompt (remove caracteres invisíveis, unicode, etc).
-    Não faz validação de segurança - isso é responsabilidade do GuardRail.
     """
     cleaned, status = sanitize(req.prompt)
     return {"status": "ok", "clean_prompt": cleaned}
