@@ -72,6 +72,80 @@ A arquitetura de microsserviços é gerenciada com Docker Compose, facilitando a
 
 -----
 
+Aqui está uma versão **bem mais resumida**, direta e adequada para o README:
+
+---
+
+# 🧪 Como Executar os Testes
+
+## 1. Testes Unitários
+
+Cada microsserviço possui seus próprios testes.
+Execute dentro de cada pasta:
+
+**Sanitizer**
+
+```bash
+cd code/sanitizer
+pytest -v
+```
+
+**Guardrail**
+
+```bash
+cd code/guardrail
+pytest -v
+```
+
+**Orchestrator**
+
+```bash
+cd code/orchestrator
+pytest -v
+```
+
+**Resultados esperados:**
+
+* Sanitizer: 11/11 testes aprovados
+* Guardrail: 22/22 aprovados
+* Orchestrator: 11/12 aprovados 
+---
+
+## 2. Testes de Integração (API)
+
+1. Inicie todos os serviços:
+
+```bash
+cd code
+docker-compose up --build
+```
+
+2. Rode os testes de integração:
+
+```bash
+cd code/orchestrator
+pytest -v -m integration
+```
+
+**Resultado esperado:** 17/17 testes aprovados (100%) 
+
+---
+
+## 3. Testes no Postman
+
+1. Com a arquitetura rodando via Docker
+2. Importe a coleção de testes
+3. Rode via *Collection Runner*
+
+**Comportamentos esperados:**
+
+* Bloqueio de viés → 400
+* Bloqueio de delírios → 400
+* Sanitização de dados sensíveis → 200 (texto limpo)
+  (Evidências: páginas 11–13 do relatório )
+
+---
+
 ## 👥 Equipe
 
 Este projeto foi desenvolvido pelo grupo "Segurança de prompts em modelos de LLMS", composto por:
