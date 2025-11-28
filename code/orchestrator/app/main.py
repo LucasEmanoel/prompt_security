@@ -6,9 +6,12 @@ app = FastAPI(title="Orchestrator API")
 
 SANITIZER_URL = "http://sanitizer:8000/sanitize"
 GUARDRAIL_URL = "http://guardrail:6000/check"
+BIAS_GUARDRAIL_URL = "http://bias_guardrail:5000/validate"
+OUTPUT_GUARDRAIL_URL = "http://output_guardrail:4000/validate"
 
 class PromptRequest(BaseModel):
     prompt: str
+    llm_response: str
 
 class ProcessResponse(BaseModel):
     original_prompt: str
@@ -75,14 +78,62 @@ async def process_prompt(req: PromptRequest):
             detail=guardrail_data.get("reason", "Conteúdo bloqueado pelos guardrails")
         )
     
-    safe_prompt = guardrail_data.get("safe_output", clean_prompt)
+    unregex_prompt = guardrail_data.get("safe_output", clean_prompt)
+
+    try:
+        async with httpx.AsyncClient() as client:
+            bias_guardrail_resp = await client.post(
+                BIAS_GUARDRAIL_URL,
+                json={"prompt": unregex_prompt},
+                timeout=10.0
+            )
+            bias_guardrail_data = bias_guardrail_resp.json()
+    except httpx.TimeoutException:
+        raise HTTPException(
+            status_code=504, 
+            detail="Timeout ao comunicar com o Bias GuardRail"
+        )
+
+    if not bias_guardrail_data.get("valid", False):
+        raise HTTPException(
+            status_code=400, 
+            detail=bias_guardrail_data.get("error", "Conteúdo bloqueado pelo bias guardrail")
+        )
     
-    # Etapa 3: Chamada ao LLM (simulado)
-    llm_response = f"Resposta gerada pelo LLM para o prompt: '{safe_prompt}'. Esta é uma simulação acadêmica."
+    safe_input_prompt = bias_guardrail_data.get("prompt", clean_prompt)
+
+    # Resposta padrão fake de LLM
+    llm_response = "Azure is a cloud computing service created by Microsoft. It's a significant competitor to AWS."
+
+    # Caso um valor customizado seja passado como parâmetro altera (para testes do output guardrail)
+    if req.llm_response:
+        llm_response = req.llm_response
+
+    try:
+        async with httpx.AsyncClient() as client:
+            #faz chamada para serviço de output guardrail
+            out_guardrail_resp = await client.post(
+                OUTPUT_GUARDRAIL_URL,
+                json={"prompt": llm_response},
+                timeout=10.0
+            )
+            out_guardrail_data = out_guardrail_resp.json()
+    except httpx.TimeoutException:
+        raise HTTPException(
+            status_code=504, 
+            detail="Timeout ao comunicar com o Output GuardRail"
+        )
+
+    #caso o output guardrail lançe erro, barra a resposta
+    if not out_guardrail_data.get("valid", False):
+        raise HTTPException(
+            status_code=400, 
+            detail=out_guardrail_data.get("error", "Conteúdo bloqueado pelo output guardrail")
+        )
     
     # Retorna a resposta processada
     return ProcessResponse(
         original_prompt=req.prompt,
-        sanitized_prompt=safe_prompt,
+        sanitized_prompt=safe_input_prompt,
         llm_response=llm_response
     )

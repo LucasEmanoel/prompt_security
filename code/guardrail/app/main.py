@@ -8,12 +8,13 @@ class GuardrailRequest(BaseModel):
     text: str
 
 # Palavras proibidas (exemplo acadêmico)
-BANNED_KEYWORDS = ["bomba", "explosivo", "hackear", "ddos", "malware", "vírus"]
+BANNED_KEYWORDS = ["bomb", "explosive", "hack", "ddos", "malware", "virus"]
 
 # Padrões de prompt injection
 INJECTION_PATTERNS = [
     r"ignore.*(instruções|instructions|instrucoes|prompts?)",
     r"revele.*(seu|o|your)?\s*(prompt|sistema|system)",
+    r"reveal.*?(?:your|the)?\s*(?:prompt|system)",
     r"jailbreak",
     r"bypass",
     r"você agora (é|sera|vai ser)",
@@ -64,8 +65,8 @@ def apply_guardrails(text: str):
             "safe_output": None
         }
 
-    cleaned = re.sub(r"\b[\w\.-]+@[\w\.-]+\.\w+\b", "[EMAIL_REMOVIDO]", text)
-    cleaned = re.sub(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b", "[CPF_REMOVIDO]", cleaned)
+    cleaned = re.sub(r"\b[\w\.-]+@[\w\.-]+\.\w+\b", "[EMAIL_REMOVED]", text)
+    cleaned = re.sub(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b", "[CPF_REMOVED]", cleaned)
 
     return {
         "allowed": True,
