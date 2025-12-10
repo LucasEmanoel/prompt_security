@@ -1,0 +1,19 @@
+# Dependências para análise de métricas
+
+# Análise de dados
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Visualização
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Requisições HTTP
+requests>=2.31.0
+
+# Utilities
+python-dateutil>=2.8.2
+
+# Jupyter (opcional - para análise interativa)
+jupyter>=1.0.0
+ipywidgets>=8.0.0

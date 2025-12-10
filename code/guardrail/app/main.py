@@ -1,27 +1,43 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import re
+from typing import Optional
 
-app = FastAPI()
+app = FastAPI(title="Input GuardRail API")
 
 class GuardrailRequest(BaseModel):
     text: str
 
-# Palavras proibidas (exemplo acadêmico)
-BANNED_KEYWORDS = ["bomb", "explosive", "hack", "ddos", "malware", "virus"]
-
-# Padrões de prompt injection
+# Padrões de prompt injection (EXPANDIDOS)
 INJECTION_PATTERNS = [
-    r"ignore.*(instruções|instructions|instrucoes|prompts?)",
-    r"revele.*(seu|o|your)?\s*(prompt|sistema|system)",
-    r"reveal.*?(?:your|the)?\s*(?:prompt|system)",
-    r"jailbreak",
-    r"bypass",
-    r"você agora (é|sera|vai ser)",
-    r"you are now",
-    r"disregard.*(previous|anterior|all)",
-    r"forget (all|everything|todas?)",
-    r"desconsidere.*(anterior|anteriores|tudo)",
+    r"ignore\s+(all\s+)?(previous|anterior|earlier)\s+(instructions?|prompts?|commands?|instrucoes)",
+    r"ignore\s+(your|the)\s+(instructions?|prompts?|commands?)",
+    r"disregard\s+(all\s+)?(previous|anterior|earlier|your|the)",
+    r"forget\s+(your|all|everything|all\s+previous)\s+(programming|instructions?|commands?|rules)",
+    r"act\s+as\s+(if\s+)?(you|an)\s+(are\s+)?(unrestricted|unfiltered|uncensored)",
+    r"you\s+are\s+now\s+(in\s+)?(developer|admin|god|root)\s+mode",
+    r"bypass\s+(your|the|all)?\s*(filters?|restrictions?|safety|guidelines?)",
+    r"override\s+(your|the|all)?\s*(safety|security|filters?|restrictions?)",
+    r"new\s+instructions?:\s*ignore",
+    r"system\s+prompt\s*(override|reset|change)",
+    r"reveal\s+(your|the)\s+system\s+prompt",
+    r"what\s+(are|were)\s+your\s+(original|initial)\s+instructions",
+]
+
+# Palavras proibidas (EXPANDIDAS)
+FORBIDDEN_WORDS = [
+    "hack", "hacking", "hacker", "crack", "cracking",
+    "exploit", "exploiting", "vulnerability",
+    "ddos", "dos attack",
+    "malware", "virus", "trojan", "ransomware",
+    "phish", "phishing", "spoof", "spoofing",
+    "keylogger", "backdoor", "rootkit",
+    "sql injection", "xss", "csrf",
+    "brute force", "bruteforce",
+    "password crack", "crack password",
+    "steal data", "data breach",
+    "illegal", "crime", "criminal activity",
+    "bomb", "explosive", "weapon", "terrorism",
 ]
 
 def detect_injection(text: str) -> tuple[bool, str]:
@@ -35,7 +51,7 @@ def detect_injection(text: str) -> tuple[bool, str]:
 def detect_banned_keywords(text: str) -> tuple[bool, str]:
     """Detecta palavras proibidas."""
     lowered = text.lower()
-    for kw in BANNED_KEYWORDS:
+    for kw in FORBIDDEN_WORDS:
         if kw in lowered:
             return True, f"Palavra proibida detectada: '{kw}'"
     return False, ""
