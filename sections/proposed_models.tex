@@ -1,63 +1,81 @@
-
-
-\section{Modelos Propostos}
-\begin{table*}[!ht]
-  \small 
-  \renewcommand{\arraystretch}{1.3}
-  \setlength{\extrarowheight}{2pt}
-  \caption{Comparison of Related Works on Prompt Injection Defense in LLMs}
-  \label{tab:related_works}
-  \begin{tabularx}{\textwidth}{
-      >{\raggedright\arraybackslash}p{0.15\textwidth}
-      >{\raggedright\arraybackslash}X
-      >{\raggedright\arraybackslash}p{0.18\textwidth}
-      >{\raggedright\arraybackslash}p{0.18\textwidth}
-      >{\raggedright\arraybackslash}p{0.20\textwidth}}
-    \toprule
-    \textbf{Referencia} & \textbf{Foco} & \textbf{Metodologia} 
-      & \textbf{Métricas} & \textbf{Lacuna} \\
-    \midrule
-
-      Lin, Huawei \emph{et al.} \cite{Lin2025UniGuardian} 
-      & Proposta de defesa unificada (UniGuardian) contra ataques de LLM (injeção, backdoor, adversariais).
-      & Propõe um framework de detecção unificado para analisar prompts e saídas.
-      & (1) auROC (Area Under the Receiver Operator Characteristic Curve) e (2) auPRC (Area Under the Precision-Recall Curve).
-      & Falta de profundidade no que tange a ataques de backdoor mais complexos ou ofuscados, gerando falsos positivos. \\
-    \midrule
-      Hong, Hanbin \emph{et al.} \cite{Hong2025SystematizationOfKnowledge} 
-      & Sistematização do conhecimento em segurança de prompts em LLMs, propondo uma taxonomia e um conjunto de métricas próprias para padronizar avaliações de ataques e defesas.
-      & Revisão sistemática e proposta de uma taxonomia multi-nível. Desenvolvimento de toolkit aberto e dataset (JailbreakDB) para avaliação padronizada.
-      & Propõe métricas padronizadas próprias integradas a um toolkit de avaliação com taxonomia hierárquica e perfis de ameaça formais.
-      & Limitação na aplicação prática das métricas e taxonomias propostas; necessidade de validação contínua e ampliação para modelos multimodais e cenários reais. \\
-    \midrule
-      Chen, Sizhe \emph{et al.} \cite{Chen2025StruQ}
-      & Proposta de defesa chamada \textit{StruQ}, que utiliza consultas estruturadas (\textit{structured queries}) para separar dados do prompt, reduzindo o risco de injeções maliciosas em LLMs.
-      & Implementação experimental com análise de desempenho e eficácia em diferentes cenários de injeção. Avalia a separação entre dados e instruções para mitigar ataques.
-      & Taxa de sucesso de ataque, latência e sobrecarga do sistema (\textit{defense overhead}).
-      & Boa eficácia em prompts simples, mas limitação em ataques indiretos e cenários complexos de múltiplas etapas, exigindo integração com outras técnicas de defesa. \\
-      
-    \midrule
-      Benjamin, Victoria \emph{et al.} \cite{benjamin2024}
-      & Análise sistemática da vulnerabilidade de 36 LLMs a ataques de injeção de prompt focados em gerar código de keylogger.
-      & 4 prompts de injeção direta contra 36 LLMs. Análise estatística (Correlação, Random Forest, SHAP, PCA).
-      & (1) Taxa de sucesso (2) Importância de features. (3) Correlação entre prompts.
-      & Necessidade de testes multilíngues, múltiplas etapas de complexidade. \\
-    \midrule
-      Sebastian, Glorin. \cite{Sebastian2023SecurityUserInformation:}
-      & Investigar a proteção de dados e privacidade em chatbots (foco no ChatGPT). Avaliar Tecnologias de Aprimoramento de Privacidade (PETs).
-      & Revisão da literatura, análise de técnicas (ex: privacidade diferencial) e uma pesquisa (survey) com 177 usuários.
-      & Métricas de percepção da pesquisa: (1) Nível de preocupação, (2) Disposição para sacrificar desempenho, (3) Consciência sobre vazamentos.
-      & Análise de riscos à privacidade, preocupação dos usuários através de pesquisas. \\
-    \midrule
-    \textbf{This Work}
-      & \textbf{Análise comparativa de frameworks de defesa contra injeção de prompt em LLMs.}
-      & \textbf{Prova de conceito e simulações baseadas em diferentes cenários de ataque.}
-      & \textbf{Taxa de sucesso de ataque, resiliência e custo computacional.}
-      & \textbf{Busca preencher a lacuna de falta de metodologia padronizada para comparação empírica entre defesas.} \\
-    \bottomrule
-  \end{tabularx}
-\end{table*}
-
-\section{Proposed Model}
+\section{Modelo Proposto}
 \label{sec:proposed_model}
-Proposed model text goes here.
+
+Esta seção apresenta o modelo conceitual que fundamenta a arquitetura multicamadas desenvolvida para fortalecer a segurança de Modelos de Linguagem de Grande Escala (LLMs). Enquanto a seção de Arquitetura descreve a organização estrutural dos componentes, o modelo proposto formaliza os princípios, pressupostos e a lógica operacional que regem como a segurança é aplicada ao longo de todo o fluxo de interação.
+
+\subsection{Princípios de Projeto}
+
+O modelo proposto baseia-se em quatro princípios fundamentais:
+
+\begin{itemize}
+    \item \textbf{Defesa em Camadas}: Nenhum mecanismo isolado é suficiente para garantir segurança em sistemas baseados em LLMs. Múltiplas camadas independentes aumentam a robustez contra diferentes vetores de ataque.
+    
+    \item \textbf{Filtragem Sensível ao Contexto}: Muitas ameaças e vieses se manifestam em nível semântico. Assim, o modelo incorpora verificações contextuais capazes de identificar riscos implícitos ou sutis.
+    
+    \item \textbf{Interferência Mínima}: O sistema deve intervir apenas quando necessário, preservando a fluidez da interação e reduzindo falsos positivos.
+    
+    \item \textbf{Aplicação Transparente}: Todas as decisões devem ser rastreáveis, auditáveis e interpretáveis, atendendo aos princípios de segurança e conformidade ética.
+\end{itemize}
+
+Esses princípios orientam a integração e o comportamento dos módulos que compõem a arquitetura.
+
+\subsection{Modelo de Ameaças}
+
+O modelo proposto assume que o sistema pode ser alvo das seguintes capacidades adversariais:
+
+\begin{itemize}
+    \item Tentativas diretas ou indiretas de \textit{prompt injection} para subverter instruções do sistema.
+    \item Solicitações destinadas a induzir o modelo a gerar conteúdo nocivo, como código malicioso, discurso de ódio ou desinformação.
+    \item Submissão de prompts enviesados com a intenção de provocar respostas discriminatórias.
+    \item Tentativas de extrair ou manipular informações pessoais identificáveis (PII).
+    \item Indução de alucinações explorando ambiguidades ou limitações do modelo.
+\end{itemize}
+
+A estratégia de defesa é, portanto, bifásica: monitora tanto a entrada (antes do processamento pelo LLM) quanto a saída (após a geração da resposta).
+
+\subsection{Visão Geral do Modelo Conceitual}
+
+O modelo organiza o processo de defesa em três camadas conceituais:
+
+\begin{enumerate}
+    \item \textbf{Camada de Normalização Estrutural}: Responsável pela sanitização da entrada, removendo caracteres invisíveis, padrões de ofuscação e anomalias de codificação, garantindo um formato limpo e consistente.
+    
+    \item \textbf{Camada de Identificação Semântica de Riscos}: Detecta intenções maliciosas, tentativas de \textit{jailbreak}, presença de PII e categorias de viés por meio de classificadores baseados em regras e padrões semânticos.
+    
+    \item \textbf{Camada de Validação Pós-Geração}: Examina a resposta produzida pelo LLM para identificar alucinações, conteúdo proibido, violações éticas ou vazamento de informações sensíveis.
+\end{enumerate}
+
+As camadas operam de forma sequencial, mas mantêm independência lógica para garantir resiliência caso alguma verificação isolada falhe.
+
+\subsection{Lógica Operacional}
+
+O funcionamento do modelo segue o fluxo abaixo:
+
+\begin{enumerate}
+    \item O usuário envia um prompt.
+    \item O \textit{Sanitizer} aplica normalização estrutural e remove potenciais artefatos nocivos.
+    \item O \textit{Input Guardrail} avalia o prompt sanitizado quanto a riscos explícitos.
+    \item Caso o prompt seja considerado seguro, ele é encaminhado ao LLM; caso contrário, o sistema bloqueia a requisição e retorna uma resposta padronizada.
+    \item O LLM gera uma resposta.
+    \item O \textit{Bias and Output Guardrail} avalia a resposta quanto à presença de alucinações, vieses, conteúdo indevido e possíveis violações de segurança.
+    \item O \textit{Orchestrator} compila um retorno estruturado contendo o status da verificação e a resposta final ou mensagem de bloqueio.
+\end{enumerate}
+
+Esse fluxo estabelece um mecanismo de defesa fechado, atuando nos dois extremos da interação.
+
+\subsection{Vantagens do Modelo}
+
+O modelo proposto apresenta diversas vantagens, entre elas:
+
+\begin{itemize}
+    \item \textbf{Alta Resiliência}: Camadas múltiplas asseguram que a detecção não dependa de um único ponto de falha.
+    \item \textbf{Escalabilidade}: Novos módulos podem ser adicionados sem alterar a lógica central.
+    \item \textbf{Transparência}: Respostas padronizadas permitem auditoria e rastreamento de decisões.
+    \item \textbf{Conformidade Ética}: A detecção de vieses e alucinações reforça práticas de IA responsável.
+    \item \textbf{Generalização}: O modelo é compatível com diferentes LLMs e APIs, exigindo apenas adaptações mínimas.
+\end{itemize}
+
+\subsection{Síntese}
+
+O modelo proposto formaliza uma estratégia de defesa multicamadas, sensível ao contexto e orientada por princípios de segurança e ética. Ele estabelece a base conceitual para os experimentos, análises e resultados apresentados na Seção~\ref{sec:resultados_finais}.
+

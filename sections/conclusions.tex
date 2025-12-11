@@ -1,2 +1,33 @@
 \section{Conclusão e Trabalhos Futuros}
 \label{sec:conclusion}
+
+Este trabalho apresentou uma arquitetura multicamadas voltada para a segurança de Modelos de Linguagem de Grande Escala (LLMs), integrando mecanismos de sanitização, detecção de riscos explícitos, identificação de vieses e validação pós-geração. Os experimentos realizados demonstraram que a abordagem é tecnicamente viável, resiliente e capaz de mitigar de forma eficaz uma variedade de ameaças associadas ao uso de LLMs em ambientes abertos.
+
+O sistema mostrou desempenho robusto na detecção de ataques explícitos, incluindo tentativas de \textit{prompt injection}, \textit{jailbreak} e solicitações maliciosas, além de apresentar eficácia total em todas as categorias de informações pessoais identificáveis (PII). As métricas obtidas — com F1-score igual a 1.00 para categorias de risco explícito — validam a capacidade da arquitetura de atuar como um mecanismo confiável de defesa em camadas. A ausência de falsos positivos reforça a minimização de interferência indevida na experiência do usuário.
+
+Por outro lado, os resultados também evidenciaram limitações importantes, sobretudo na detecção de vieses linguísticos implícitos. Categorias como gênero, corpo, educação e LGBTQIA+ permaneceram com baixa ou nula taxa de sucesso, indicando que heurísticas baseadas apenas em regras e padrões simples não são suficientes para capturar nuances semânticas presentes em conteúdos enviesados. Essa limitação é consistente com desafios identificados na literatura e reforça a necessidade de incorporar mecanismos mais avançados de análise.
+
+De forma geral, os resultados confirmam a hipótese central deste trabalho: \textit{uma arquitetura multicamadas, sensível ao contexto e baseada em verificações estruturais e semânticas, aumenta significativamente a segurança e a confiabilidade de sistemas baseados em LLMs}. O modelo proposto estabelece um arcabouço sólido para futuras extensões e aprimoramentos em sistemas de IA responsáveis.
+
+\subsection*{Trabalhos Futuros}
+
+Com base nas limitações observadas e nas oportunidades identificadas ao longo deste estudo, destacam-se as seguintes direções para trabalhos futuros:
+
+\begin{itemize}
+    \item \textbf{Aprimoramento da detecção de vieses}: Investigar o uso de classificadores supervisionados, embeddings semânticos e modelos específicos para vieses, a fim de ampliar a cobertura e reduzir falsos negativos.
+    
+    \item \textbf{Otimização do Bias Guardrail}: Reduzir a latência do módulo por meio de técnicas como pré-filtragem, paralelização, cache semântico e modelos mais leves para análise textual.
+
+    \item \textbf{Ampliação do conjunto de testes}: Construir um dataset mais extenso, diversificado e representativo, incluindo casos reais de ataques, vieses complexos e cenários ambíguos.
+
+    \item \textbf{Integração com modelos de avaliação contextual}: Incorporar módulos capazes de analisar contexto discursivo, pragmático e situacional, permitindo identificar violações implícitas que escapam a regras estáticas.
+
+    \item \textbf{Melhorias no contrato de resposta}: Expandir o esquema padronizado do \textit{Orchestrator} para facilitar auditabilidade, rastreamento de decisões e integração com sistemas corporativos.
+
+    \item \textbf{Ciclos contínuos de validação}: Adotar práticas de CI/CD com testes automáticos de segurança, avaliando regressões de desempenho conforme novos modelos ou atualizações são introduzidos.
+
+    \item \textbf{Avaliação em cenários reais}: Implantar a arquitetura em contextos reais — como chatbots institucionais, sistemas educacionais ou plataformas de suporte — para observar comportamento sob demanda real e requisitos operacionais diversos.
+\end{itemize}
+
+Assim, este trabalho não apenas demonstra a viabilidade de mecanismos de segurança multicamadas para LLMs, mas também abre caminho para pesquisas futuras que possam ampliar a precisão, reduzir a latência, fortalecer a detecção de vieses e consolidar práticas de IA responsável em ambientes reais.
+

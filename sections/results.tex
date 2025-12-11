@@ -1,2 +1,92 @@
-\section{Resultados}
+\section{Resultados e Análise}
 \label{sec:resultados_finais}
+
+Esta seção apresenta a análise detalhada dos experimentos conduzidos para avaliar a eficácia da arquitetura multicamadas proposta para segurança em LLMs. Foram analisadas métricas de desempenho, taxas de sucesso, matriz de confusão e tempos de resposta, utilizando 30 casos de teste distribuídos entre categorias críticas, como vieses, ataques maliciosos, tentativas de \textit{jailbreak} e detecção de PII.
+
+Os resultados permitem identificar pontos fortes e limitações da solução, fornecendo evidências quantitativas para validação da hipótese central deste trabalho.
+
+\subsection{Taxa de Sucesso por Categoria}
+
+A Figura~\ref{fig:sucesso_categoria} apresenta a taxa de sucesso por categoria. Observa-se um desempenho excelente em categorias de ataque explícito, incluindo \textit{malicious}, \textit{pii\_cpf}, \textit{pii\_credit\_card}, \textit{pii\_email}, \textit{pii\_phone} e \textit{pii\_ssn}, todas atingindo 100\% de sucesso.
+
+Em contraste, categorias relacionadas a vieses linguísticos apresentam maior dificuldade para o sistema, especialmente \textit{bias\_body}, \textit{bias\_disability}, \textit{bias\_education}, \textit{bias\_gender}, \textit{bias\_geographic}, \textit{bias\_language} e \textit{bias\_lgbtq}, que obtiveram 0\% de sucesso. Esses resultados revelam que detectar vieses implícitos continua sendo um desafio significativo para abordagens baseadas em regras.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.48\textwidth]{sections/images/sucesso_por_categorias.jpg}
+    \caption{Taxa de sucesso por categoria. Categorias de PII e ataques apresentam desempenho excelente, enquanto várias categorias de viés apresentam baixo desempenho.}
+    \label{fig:sucesso_categoria}
+\end{figure}
+
+\subsection{Métricas por Categoria}
+
+A Figura~\ref{fig:metricas_categoria} resume as métricas de \textit{Precision}, \textit{Recall}, \textit{F1-score} e \textit{Accuracy} para cada classe avaliada. Observa-se:
+
+\begin{itemize}
+    \item \textbf{Desempenho excepcional} para categorias maliciosas e de PII, com todas as métricas atingindo 1.00.
+    \item \textbf{Desempenho intermediário} em subcategorias como \textit{bias\_age}, \textit{bias\_racial} e \textit{bias\_social}, com F1-score entre 0.33 e 0.67.
+    \item \textbf{Desempenho nulo} para categorias de viés mais sutis, refletindo a dificuldade de capturar nuances semânticas sem módulos especializados.
+\end{itemize}
+
+Esses resultados reforçam que ataques explícitos são mais facilmente detectáveis do que vieses linguísticos, que exigem mecanismos semânticos mais sofisticados.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.48\textwidth]{sections/images/metrica_por_categorias.jpg}
+    \caption{Comparação de métricas por categoria. O desempenho é excelente em categorias de risco explícito e inconsistente em categorias de viés.}
+    \label{fig:metricas_categoria}
+\end{figure}
+
+\subsection{Matriz de Confusão Geral}
+
+A Figura~\ref{fig:matriz_confusao} mostra a matriz de confusão geral considerando a classificação binária entre conteúdos seguros e conteúdos de risco.
+
+Os resultados apresentam:
+
+\begin{itemize}
+    \item 0 \textbf{falsos positivos} (nenhum conteúdo seguro foi bloqueado indevidamente);
+    \item 25 \textbf{falsos negativos} em categorias de viés (conteúdos nocivos classificados como seguros);
+    \item 5 \textbf{verdadeiros positivos} (ameaças reais corretamente identificadas);
+    \item 0 \textbf{verdadeiros negativos} no conjunto avaliado.
+\end{itemize}
+
+O modelo mostrou-se extremamente conservador em não bloquear conteúdo seguro, mas menos eficaz na detecção de vieses sutis, indicando oportunidade de melhoria.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.48\textwidth]{sections/images/matriz_de_confusao.jpg}
+    \caption{Matriz de confusão geral para as categorias avaliadas.}
+    \label{fig:matriz_confusao}
+\end{figure}
+
+\subsection{Análise de Tempo de Resposta}
+
+A Figura~\ref{fig:tempo_resposta} apresenta a distribuição dos tempos de resposta dos módulos. Dois comportamentos distintos surgem:
+
+\begin{itemize}
+    \item \textbf{Módulos de ataque e PII}: respostas extremamente rápidas (próximas de 0 segundos), devido ao uso de verificações diretas baseadas em regras.
+    \item \textbf{Categorias de viés}: tempos entre 2.8 e 3.4 segundos, indicando maior custo computacional para análise semântica.
+\end{itemize}
+
+A média geral de 0.508s, embora adequada no contexto experimental, sugere que otimizações no módulo de vieses podem reduzir significativamente a latência do sistema.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.48\textwidth]{sections/images/tempo_de_resposta.jpg}
+    \caption{Distribuição dos tempos de resposta por categoria.}
+    \label{fig:tempo_resposta}
+\end{figure}
+
+\subsection{Síntese dos Resultados}
+
+A análise global demonstra que:
+
+\begin{itemize}
+    \item A arquitetura é altamente eficaz para ataques explícitos e identificação de PII.
+    \item A detecção de vieses exige aprimoramentos significativos.
+    \item Não houve falsos positivos, reforçando a preservação da experiência do usuário.
+    \item Os tempos de resposta são consistentes e adequados, com oportunidades de otimização no Bias Guardrail.
+\end{itemize}
+
+Esses resultados validam a hipótese do trabalho: \textit{uma arquitetura multicamadas melhora a segurança em LLMs}, embora módulos específicos (como o de viés) ainda precisem ser refinados.
+

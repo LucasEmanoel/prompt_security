@@ -1,2 +1,25 @@
 \section{Introdução}
 \label{sec:introduction}
+
+Modelos de Linguagem de Grande Escala (LLMs) têm se tornado componentes centrais em aplicações modernas, incluindo assistentes virtuais, sistemas conversacionais, plataformas educacionais e ambientes corporativos. Sua capacidade de gerar, interpretar e transformar linguagem natural em larga escala permite níveis de automação antes inviáveis. Entretanto, essa mesma flexibilidade introduz riscos significativos relacionados à segurança, ética e confiabilidade, especialmente quando tais modelos são expostos diretamente a usuários finais ou integrados a sistemas críticos.
+
+Diversas vulnerabilidades inerentes aos LLMs têm sido amplamente documentadas na literatura, incluindo ataques de \textit{prompt injection}, tentativas de \textit{jailbreak} para subverter instruções do sistema, geração de conteúdo malicioso, vieses socioculturais reproduzidos ou amplificados pelo modelo e alucinações (\textit{hallucinations}) que podem resultar em informações factualmente incorretas ou perigosas. Além disso, LLMs podem inadvertidamente vazar informações pessoais identificáveis (PII), expondo organizações e usuários a riscos legais e de privacidade.
+
+Soluções tradicionais baseadas apenas em filtragem estática, listas de bloqueio ou simples verificações sintáticas têm se mostrado insuficientes para lidar com ameaças cada vez mais sofisticadas. Isso ocorre porque muitos ataques exploram dependências semânticas, ambiguidades linguísticas e lacunas nos mecanismos de alinhamento do modelo, exigindo abordagens mais abrangentes e sensíveis ao contexto.
+
+Diante desse cenário, este trabalho propõe uma arquitetura multicamadas para segurança de LLMs, composta por módulos de sanitização estrutural, detecção de ameaças explícitas, identificação de vieses e validação de saídas, orquestrados de forma sistemática por um serviço centralizado. O objetivo é oferecer um mecanismo de defesa capaz de atuar em diferentes níveis do fluxo de interação, mitigando riscos antes e depois da geração da resposta pelo modelo.
+
+Para avaliar a eficácia da solução proposta, foram conduzidos experimentos envolvendo 30 casos de teste distribuídos entre categorias críticas, incluindo ataques maliciosos, tentativas de \textit{jailbreak}, exposição de PII e múltiplas subcategorias de viés linguístico. Métricas quantitativas — como precisão, recall, acurácia e F1-score — foram utilizadas para mensurar o desempenho da arquitetura em cenários adversariais. Os resultados indicam desempenho superior nas categorias de risco explícito, enquanto apontam desafios persistentes na detecção de vieses implícitos.
+
+As principais contribuições deste trabalho são:
+
+\begin{itemize}
+    \item a proposição de uma arquitetura multicamadas para segurança em LLMs, combinando verificações sintáticas, estruturais e semânticas;
+    \item o desenvolvimento de módulos especializados para sanitização, bloqueio de ataques, detecção de vieses e validação pós-geração;
+    \item a definição de um fluxo padronizado de comunicação que aumenta a interpretabilidade e auditabilidade das decisões de segurança;
+    \item a avaliação experimental da arquitetura em um conjunto diversificado de cenários adversariais, com análise quantitativa e comportamental dos resultados.
+\end{itemize}
+
+O restante deste artigo está estruturado da seguinte forma. A Seção~\ref{sec:background} apresenta os fundamentos teóricos relacionados a LLMs e mecanismos de segurança. A Seção~\ref{sec:related} discute os principais trabalhos relacionados. A
+Seção~\ref{sec:architecture} descreve a arquitetura do sistema. A Seção~\ref{sec:proposed_model} apresenta o modelo conceitual subjacente. A Seção~\ref{sec:resultados_finais} discute os resultados experimentais. Por fim, a Seção~\ref{sec:conclusion} apresenta as conclusões e trabalhos futuros.
+

@@ -1,76 +1,67 @@
 \documentclass[journal]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
 \usepackage{graphicx}
-\usepackage{svg}    
+\usepackage{svg}
+\usepackage{amsmath}
 \usepackage{amssymb}
-\graphicspath{{img/}}
 \usepackage{booktabs}
-\usepackage{array}  
+\usepackage{array}
 \usepackage{rotating}
 \usepackage{tabularx}
 \usepackage{float}
 \usepackage{soul}
-\usepackage{amsmath} 
-\usepackage[section]{placeins}       
+\usepackage[section]{placeins}
 
-\usepackage{xcolor}              
+\graphicspath{{Images/}}
+
+\usepackage{xcolor}
 \definecolor{linkblue}{HTML}{1B458F}
 
 \usepackage[
   colorlinks=false,
-  linkcolor=linkblue,
-  citecolor=black,
-  urlcolor=linkblue,             
-  pdfborder={0 0 0},             
-  breaklinks=true,               
-  hidelinks                      
+  pdfborder={0 0 0},
+  breaklinks=true,
+  hidelinks
 ]{hyperref}
+
 \usepackage{comment}
-% \usepackage{stfloats}
+
 \begin{document}
 
-\title{Title}
 
-\author{nomes,~\IEEEmembership{Member,~IEEE}}
+\title{Arquitetura Multicamadas para Segurança em Modelos de Linguagem de Grande Escala (LLMs)}
 
-\thanks{}
-\thanks{}
-\thanks{}% <-this % stops a space
-\thanks{}%; revised November xx, 2025.}
-
+\author{
+    Nome~Sobrenome,~\IEEEmembership{Member,~IEEE}, 
+    Nome~Sobrenome,~\IEEEmembership{Member,~IEEE}%
+\thanks{Manuscrito submetido em Novembro de 2025.}
+}
 
 \maketitle
 
 \begin{abstract}
-  Abstract
+Este artigo apresenta uma arquitetura multicamadas para segurança em Modelos de Linguagem de Grande Escala (LLMs), integrando sanitização, detecção de ameaças, mitigação de vieses e validação pós-geração. Os experimentos conduzidos demonstram alta eficácia contra ataques explícitos e desafios persistentes na detecção de vieses linguísticos, contribuindo para avanços em segurança e governança de IA.
 \end{abstract}
 
 \begin{IEEEkeywords}
-  Palavras Chaves
+Segurança em IA, LLMs, Prompt Injection, Guardrails, Arquitetura de Segurança, Bias Detection
 \end{IEEEkeywords}
-
-% Abstract - ✅ 16/09/2025
 
 \IEEEpeerreviewmaketitle
 
 \input{sections/introduction}
-% Introduction - ✅ 17/09/2025
-
 \input{sections/background}
-% Background - ✅ 17/09/2025
-
 \input{sections/related}
-% Related Works - ✅ 18/09/2025
-
 \input{sections/architecture}
-% Architecture - ✅ 18/09/2025
-
 \input{sections/proposed_models}
-% Architecture - ✅ 18/09/2025
-
 \input{sections/results}
 \input{sections/conclusions}
 
 \bibliographystyle{IEEEtran}
-\bibliography{references} 
+\bibliography{references}
 
 \end{document}
+
