@@ -1,7 +1,9 @@
-\documentclass[journal]{IEEEtran}
+\documentclass[12pt]{article}
 
+\usepackage{sbc-template}
+\usepackage{graphicx,url}
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
 
 \usepackage{graphicx}
 \usepackage{svg}
@@ -14,54 +16,48 @@
 \usepackage{float}
 \usepackage{soul}
 \usepackage[section]{placeins}
+\usepackage{longtable}
+%\usepackage[latin1]{inputenc}  
 
 \graphicspath{{Images/}}
 
-\usepackage{xcolor}
-\definecolor{linkblue}{HTML}{1B458F}
-
-\usepackage[
-  colorlinks=false,
-  pdfborder={0 0 0},
-  breaklinks=true,
-  hidelinks
-]{hyperref}
-
-\usepackage{comment}
-
-\begin{document}
-
+\sloppy
 
 \title{Arquitetura Multicamadas para Segurança em Modelos de Linguagem de Grande Escala (LLMs)}
 
-\author{
-    Nome~Sobrenome,~\IEEEmembership{Member,~IEEE}, 
-    Nome~Sobrenome,~\IEEEmembership{Member,~IEEE}%
-\thanks{Manuscrito submetido em Novembro de 2025.}
+\author{Juan G. L. Cavalcante\inst{1}, Lucas E. S. Barros\inst{1}, João Vitor\inst{1}, Joás Silva\inst{1}, Lucas Messias\inst{1} }
+
+
+\address{Bacharel em Ciências da Computação -- Universidade Federal do Agreste \\
+    de Pernambuco (UFAPE) \\
+   55292-270 -- Garanhuns -- PE -- Brasil
 }
+
+\begin{document} 
 
 \maketitle
 
 \begin{abstract}
-Este artigo apresenta uma arquitetura multicamadas para segurança em Modelos de Linguagem de Grande Escala (LLMs), integrando sanitização, detecção de ameaças, mitigação de vieses e validação pós-geração. Os experimentos conduzidos demonstram alta eficácia contra ataques explícitos e desafios persistentes na detecção de vieses linguísticos, contribuindo para avanços em segurança e governança de IA.
+This paper presents a multilayered architecture for security in Large Language Models (LLMs), integrating sanitization, threat detection, bias mitigation, and post-generation validation. The conducted experiments demonstrate high effectiveness against explicit attacks and persistent challenges in detecting linguistic biases, contributing to advancements in AI safety and governance.
+
 \end{abstract}
+     
+\begin{resumo} 
+  Este artigo apresenta uma arquitetura multicamadas para segurança em Modelos de Linguagem de Grande Escala (LLMs), integrando sanitização, detecção de ameaças, mitigação de vieses e validação pós-geração. Os experimentos conduzidos demonstram alta eficácia contra ataques explícitos e desafios persistentes na detecção de vieses linguísticos, contribuindo para avanços em segurança e governança de IA.
+\end{resumo}
 
-\begin{IEEEkeywords}
-Segurança em IA, LLMs, Prompt Injection, Guardrails, Arquitetura de Segurança, Bias Detection
-\end{IEEEkeywords}
-
-\IEEEpeerreviewmaketitle
 
 \input{sections/introduction}
-\input{sections/background}
+
 \input{sections/related}
-\input{sections/architecture}
-\input{sections/proposed_models}
+
+\input{sections/methodology}
+
 \input{sections/results}
+
 \input{sections/conclusions}
 
-\bibliographystyle{IEEEtran}
-\bibliography{references}
+\bibliographystyle{sbc}
+\bibliography{sbc-template}
 
 \end{document}
-

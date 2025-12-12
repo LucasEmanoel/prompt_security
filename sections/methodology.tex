@@ -1,0 +1,37 @@
+\section{Metodologia}
+\label{sec:methodology}
+
+A metodologia adotada neste trabalho foi estruturada de forma a avaliar, de maneira sistemática e controlada, a eficácia da arquitetura proposta para segurança em Modelos de Linguagem de Grande Escala (LLMs). O processo metodológico integra a geração de cenários de ataque, a classificação de riscos, a execução de testes em múltiplos idiomas e a análise quantitativa dos resultados, permitindo uma investigação abrangente das capacidades e limitações do sistema.
+
+\subsection{Levantamento do estado da arte}
+
+Para fundamentar a investigação proposta, realizou-se um levantamento sistemático do referencial teórico em bases de dados amplamente reconhecidas na área de Computação e Inteligência Artificial, incluindo Google Acadêmico, IEEE Xplore e a Plataforma Lattes. A busca foi conduzida utilizando um conjunto de palavras-chave relacionadas ao tema central deste estudo, tais como “segurança de prompts”, “prompt injection”, “LLM security” e “prompt-based attacks”.
+
+Inicialmente, os resultados recuperados foram triados com base nos títulos e resumos, de modo a identificar pesquisas diretamente alinhadas à temática de segurança em Modelos de Linguagem de Grande Escala (LLMs). Em seguida, procedeu-se à análise exploratória dos textos selecionados, considerando critérios como relevância metodológica, atualidade das abordagens e potencial contribuição para a compreensão do estado da arte.
+
+Após esse processo de filtragem, cinco estudos foram selecionados para análise detalhada no âmbito deste projeto. Esses trabalhos representam diferentes perspectivas e metodologias aplicadas à mitigação de ataques de injeção de prompt e à avaliação de mecanismos de segurança em LLMs, fornecendo uma base sólida para a discussão crítica e para o desenvolvimento da abordagem proposta.
+
+\subsection{Desenvolvimento da Prova de Conceito (POC)}
+
+Após a elaboração do referencial teórico e a identificação das abordagens mais relevantes na área de segurança de prompts, procedeu-se ao desenvolvimento de um conjunto de aplicações destinadas à validação prática das técnicas analisadas. Esse desenvolvimento ocorreu de forma incremental, permitindo a implementação, teste e aprimoramento progressivo das funcionalidades relacionadas à detecção e mitigação de injeções de prompt em Modelos de Linguagem de Grande Escala (LLMs).
+
+O ambiente experimental foi estruturado utilizando Python como linguagem base, devido à sua ampla adoção em projetos de inteligência artificial e ao ecossistema robusto de bibliotecas voltadas para processamento linguístico. Para a construção dos serviços de backend e exposição de interfaces de validação, empregou-se o framework FastAPI, que possibilita a criação de APIs de alto desempenho com tipagem clara e integração facilitada com modelos de IA.
+
+Com o objetivo de garantir reprodutibilidade, isolamento e facilidade de implantação do ambiente, todas as aplicações foram containerizadas com Docker, permitindo a execução consistente dos serviços independentemente da infraestrutura subjacente. Além disso, integrou-se o framework Guardrails AI para implementar mecanismos de verificação, sanitização e conformidade dos prompts, assegurando que as entradas e saídas dos modelos fossem avaliadas segundo critérios de segurança previamente definidos.
+
+\subsection{Construção dos Casos de Teste}
+
+Para validar a assertividade da POC, foram desenvolvidos 30 casos de teste distribuídos entre quatro grupos principais:
+
+\begin{itemize}
+    \item \textbf{Ataques explícitos}: tentativas de \textit{prompt injection}, indução maliciosa e manipulação direta do comportamento do modelo;
+    \item \textbf{Detecção de PII}: solicitações envolvendo CPF, e-mail e telefone;
+    \item \textbf{Vieses linguísticos}: categorias relacionadas a gênero, raça, idade, orientação, localização geográfica;
+    \item \textbf{Alucinações}: prompts projetados para induzir respostas factualmente inconsistentes.
+\end{itemize}
+
+\subsection{Sistematização dos Resultados e elaboração do Artigo}
+
+Após a execução dos experimentos, os resultados obtidos foram organizados e analisados de forma sistemática, permitindo identificar padrões, comparar diferentes abordagens de defesa e avaliar a eficácia das estratégias de mitigação de ataques de prompt em LLMs. As métricas de desempenho, latência e assertividade foram tabuladas, destacando-se tanto os sucessos quanto as limitações observadas em cenários específicos.
+
+Com base nessa análise, os achados foram estruturados de maneira lógica para compor o manuscrito, articulando a revisão de literatura, a metodologia aplicada e os resultados obtidos de forma coerente e integrada. A redação do artigo seguiu princípios de clareza, objetividade e rigor acadêmico, buscando apresentar as contribuições do estudo, as lacunas identificadas na literatura existente e as implicações práticas e teóricas das soluções desenvolvidas.
