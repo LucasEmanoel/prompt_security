@@ -1,8 +1,3 @@
-"""
-Módulo para geração de gráficos e visualizações.
-Responsável por toda a renderização visual de dados.
-"""
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -13,7 +8,6 @@ from collections import defaultdict
 
 
 class PlotGenerator:
-    """Gera gráficos e visualizações dos resultados."""
     
     def __init__(self, output_dir: Path):
         self.output_dir = output_dir
@@ -21,19 +15,12 @@ class PlotGenerator:
     
     @staticmethod
     def _setup_style():
-        """Configura estilo dos gráficos."""
         sns.set_style("whitegrid")
         plt.rcParams['figure.figsize'] = (12, 8)
         plt.rcParams['font.size'] = 10
     
     def plot_confusion_matrix(self, confusion_matrix: Dict, title: str = "Matriz de Confusão"):
-        """
-        Plota matriz de confusão como heatmap.
-        
-        Args:
-            confusion_matrix: Dict com TP, FP, TN, FN
-            title: Título do gráfico
-        """
+
         total = confusion_matrix.get('total', 0)
         if total == 0:
             print(f"[!!] Sem dados para plotar matriz de confusão: {title}")
@@ -59,12 +46,7 @@ class PlotGenerator:
         plt.close()
     
     def plot_metrics_comparison(self, category_metrics: Dict):
-        """
-        Plota comparação de métricas entre categorias.
-        
-        Args:
-            category_metrics: Dict com métricas por categoria
-        """
+
         if not category_metrics:
             print("[!!] Nenhuma categoria para comparação")
             return
@@ -86,7 +68,6 @@ class PlotGenerator:
             offset = width * (i - 1.5)
             bars = ax.bar(x + offset, values, width, label=metric.replace('_', ' ').title())
             
-            # Adicionar valores nas barras
             for bar in bars:
                 height = bar.get_height()
                 ax.text(bar.get_x() + bar.get_width()/2., height + 0.02,
@@ -109,12 +90,7 @@ class PlotGenerator:
         plt.close()
     
     def plot_response_time_distribution(self, report_data: Dict):
-        """
-        Plota distribuição de tempos de resposta.
-        
-        Args:
-            report_data: Dados completos do relatório
-        """
+
         results = report_data.get('results', [])
         response_times = [r.get('response_time', 0) for r in results]
         categories = [r.get('test_case', {}).get('category', 'unknown') for r in results]
@@ -150,33 +126,22 @@ class PlotGenerator:
         plt.close()
     
     def plot_success_rate_by_category(self, report_data: Dict):
-        """
-        Plota taxa de sucesso por categoria.
-        
-        Args:
-            report_data: Dados completos do relatório
-        """
+
         results = report_data.get('results', [])
         
         category_success = defaultdict(lambda: {'success': 0, 'total': 0})
         
         for result in results:
             category = result.get('test_case', {}).get('category', 'unknown')
-            expected = result.get('test_case', {}).get('expected_outcome')
-            actual = result.get('result', {})
+            test_passed = result.get('test_passed', False)
             http_status = result.get('http_status')
             
-            is_blocked = self._is_blocked(actual, http_status)
-            
-            # Considerar sucesso se comportou como esperado
-            is_success = (
-                (expected in ['block', 'detect'] and is_blocked) or
-                (expected == 'pass' and not is_blocked) or
-                (expected == 'sanitize' and (actual.get('sanitized', False) or http_status == 200))
-            )
+            # Ignorar erros de servidor
+            if http_status == 500:
+                continue
             
             category_success[category]['total'] += 1
-            if is_success:
+            if test_passed:
                 category_success[category]['success'] += 1
         
         if not category_success:
@@ -228,15 +193,3 @@ class PlotGenerator:
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
         print(f"[>>] Grafico salvo: {output_path}")
         plt.close()
-    
-    @staticmethod
-    def _is_blocked(actual_result: Dict, http_status: int) -> bool:
-        """Determina se uma resposta foi bloqueada/detectada."""
-        return (
-            http_status in [422, 403] or
-            not actual_result.get('success', True) or
-            actual_result.get('blocked', False) or
-            actual_result.get('bias_detected', False) or
-            actual_result.get('injection_detected', False) or
-            (http_status == 200 and not actual_result.get('valid', True))
-        )

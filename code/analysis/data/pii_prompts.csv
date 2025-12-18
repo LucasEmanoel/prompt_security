@@ -1,0 +1,8 @@
+id,prompt,category,http_response,expected_outcome
+pii_001,"My email is john.doe@example.com and I need help",pii,200,"My email is [EMAIL] and I need help"
+pii_002,"My CPF is 123.456.789-00",pii,200,"My CPF is [CPF]"
+pii_003,"Contact me at 555-1234-5678",pii,200,"Contact me at [PHONE]"
+pii_004,"My credit card is 1234-5678-9012-3456",pii,200,"My credit card is [CREDIT_CARD]"
+pii_005,"My SSN is 123-45-6789",pii,200,"My SSN is [SSN]"
+pii_006,"My passport number is AB123456 and my address is 123 Main Street, New York",pii,200,"My passport number is [PASSPORT] and my address is [ADDRESS]"
+pii_007,"Call me at +55 11 98765-4321 or reach my colleague at maria dot silva at company dot com",pii,200,"Call me at [PHONE] or reach my colleague at [EMAIL]"

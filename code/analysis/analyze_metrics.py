@@ -1,106 +1,98 @@
-"""
-Orquestrador principal da análise de métricas de guardrails.
-Coordena a execução de cálculos, visualizações e relatórios.
-"""
-
-import json
+import csv
 from pathlib import Path
 from typing import Dict
 
 from metrics_calculator import MetricsCalculator
 from plot_generator import PlotGenerator
-#from report_generator import ReportGenerator
 
 
 class GuardrailMetricsAnalyzer:
-    """Orquestrador principal que coordena análise completa de guardrails."""
-    
-    def __init__(self, test_report_path: str = "results/test_report.json"):
+
+    def __init__(self, test_report_path: str = None):
+        if test_report_path is None:
+            script_dir = Path(__file__).parent
+            test_report_path = script_dir / "results" / "test_results.csv"
+        
         self.test_report_path = Path(test_report_path)
+        self.results_dir = self.test_report_path.parent
+        self.results_dir.mkdir(parents=True, exist_ok=True)
+        
         self.report_data = None
-        self.metrics_calculator = None
-        self.plot_generator = None
-        #self.report_generator = None
+        self.calculator = None
+        self.plot_generator = PlotGenerator(self.results_dir)
     
-    def load_report(self) -> Dict:
-        """Carrega relatório de testes."""
+    def load_test_results(self) -> Dict:
+        
         if not self.test_report_path.exists():
-            raise FileNotFoundError(f"Relatório não encontrado: {self.test_report_path}")
+            raise FileNotFoundError(
+                f"Arquivo não encontrado: {self.test_report_path.absolute()}\n"
+                f"Diretório de trabalho: {Path.cwd()}"
+            )
         
-        with open(self.test_report_path, 'r', encoding='utf-8') as f:
-            self.report_data = json.load(f)
+        results = []
         
-        print(f"[OK] Relatorio carregado: {len(self.report_data.get('results', []))} testes")
-        return self.report_data
+        try:
+            with open(self.test_report_path, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                
+                for row in reader:
+                    result = {
+                        'test_case': {
+                            'id': row.get('id', ''),
+                            'prompt': row.get('prompt', ''),
+                            'category': row.get('category', ''),
+                            'http_response': row.get('http_response'),
+                            'expected_outcome': row.get('expected_outcome'),
+                        },
+                        'http_status': int(row.get('http_status')) if row.get('http_status') else None,
+                        'actual_outcome': row.get('actual_outcome'),
+                        'test_passed': row.get('test_passed', '').lower() == 'true',
+                        'response_time': float(row.get('response_time', 0)),
+                        'timestamp': row.get('timestamp', ''),
+                    }
+                    results.append(result)
+            
+            print(f"[OK] Carregados {len(results)} resultados de testes")
+            return {'results': results}
+            
+        except Exception as e:
+            print(f"[!!] Erro ao carregar resultados: {e}")
+            raise
     
-    def _initialize_components(self):
-        """Inicializa componentes auxiliares."""
-        self.metrics_calculator = MetricsCalculator(self.report_data)
-        self.plot_generator = PlotGenerator(self.test_report_path.parent)
-        #self.report_generator = ReportGenerator(self.test_report_path.parent)
-
     def run_complete_analysis(self):
-        """Executa análise completa dos guardrails."""
-        print("\n[>>] INICIANDO ANALISE COMPLETA DOS GUARDRAILS\n")
+        """Executa análise completa: carrega dados, calcula métricas e gera gráficos."""
         
-        # 1. Carregar dados
-        self.load_report()
+        print("\n[>>] Carregando resultados de testes...")
+        self.report_data = self.load_test_results()
         
-        # 2. Inicializar componentes
-        self._initialize_components()
+        print("[>>] Inicializando calculadora de métricas...")
+        self.calculator = MetricsCalculator(self.report_data)
         
-        # 3. Calcular métricas
-        print("\n[>>] Calculando metricas...")
-        overall_metrics = self.analyze_overall()
-        category_metrics = self.analyze_by_category()
+        print("\n[>>] Calculando métricas por categoria...")
+        category_analysis = self.calculator.analyze_by_category()
         
-        # 4. Gerar visualizações
-        print("\n[>>] Gerando visualizacoes...")
-        self.plot_generator.plot_confusion_matrix(
-            overall_metrics['confusion_matrix'],
-            "Matriz de Confusão Geral"
-        )
-        self.plot_generator.plot_metrics_comparison(
-            {k: v for k, v in category_metrics.items()}
-        )
+        print("\n[>>] Gerando graficos...")
+        self._generate_charts(category_analysis)
+        
+        print(f"\n[OK] Análise completa concluída!")
+        print(f"[OK] Resultados salvos em: {self.results_dir}")
+    
+    def _generate_charts(self, category_analysis: Dict):
+
+        for category in category_analysis.get('with_data', []):
+            metrics = category_analysis['metrics'].get(category, {})
+            if metrics.get('confusion_matrix'):
+                self.plot_generator.plot_confusion_matrix(
+                    metrics['confusion_matrix'],
+                    title=f"Matriz de Confusão - {category.upper()}"
+                )
+        
+        print("[>>] Plotando comparação de métricas por categoria...")
+        self.plot_generator.plot_metrics_comparison(category_analysis['metrics'])
+        
+        print("[>>] Plotando distribuição de tempos de resposta...")
         self.plot_generator.plot_response_time_distribution(self.report_data)
+        
+        print("[>>] Plotando taxa de sucesso por categoria...")
         self.plot_generator.plot_success_rate_by_category(self.report_data)
-        
-        # 5. Gerar tabela resumo
-        print("\n[>>] Gerando tabela resumo...")
-        summary_table = self.generate_summary_table(overall_metrics, category_metrics)
-        
-        # Salvar tabela em CSV
-        #self.report_generator.save_summary_table(summary_table)
-        
-        # Imprimir tabela no console
-        print("\n" + "="*80)
-        print("TABELA RESUMO DAS METRICAS")
-        print("="*80)
-        print(summary_table.to_string(index=False))
-        
-        # 6. Gerar interpretação
-        #print("\n[>>] Gerando interpretacao dos resultados...")
-        #interpretation = self.interpret_results(overall_metrics, category_metrics)
-        
-        # Salvar interpretação
-        #self.report_generator.save_interpretation(interpretation)
-        
-        # Imprimir interpretação
-        #print("\n" + interpretation)
-        
-        # 7. Salvar métricas detalhadas
-        #self.report_generator.save_detailed_metrics(overall_metrics, category_metrics, summary_table)
-        
-        print("\n[OK] ANALISE COMPLETA FINALIZADA!\n")
 
-
-def main():
-    analyzer = GuardrailMetricsAnalyzer(
-        test_report_path="results/test_report.json"
-    )
-    analyzer.run_complete_analysis()
-
-
-if __name__ == "__main__":
-    main()
