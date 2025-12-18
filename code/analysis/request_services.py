@@ -78,14 +78,14 @@ class GuardrailTester:
                     f"\n[>>] Testando PII: {test_case.id}, Category: {test_case.category}"
                 )
                 response = requests.post(
-                    f"{self.services['sanitizer']}/sanitize",
-                    json={"prompt": test_case.prompt},
+                    f"{self.services['guardrail']}/check",
+                    json={"text": test_case.prompt},
                     timeout=10,
                 )
 
                 if response.status_code == 200:
                     data = response.json()
-                    actual_output = data.get("clean_prompt", test_case.prompt)
+                    actual_output = data.get("safe_output", '')
                     test_passed = actual_output == test_case.expected_outcome
                     result_data = {
                         "success": test_passed,
@@ -102,6 +102,32 @@ class GuardrailTester:
 
                 http_status = response.status_code
 
+            elif test_case.category == "bias":
+                print(
+                    f"\n[>>] Testando Bias: {test_case.id}, Category: {test_case.category}"
+                )
+                response = requests.post(
+                    f"{self.services['bias_guardrail']}/validate",
+                    json={"prompt": test_case.prompt},
+                    timeout=10,
+                )
+
+                http_status = response.status_code
+                test_passed = http_status == test_case.http_response
+                actual_outcome = str(http_status)
+
+                if http_status == 200:
+                    data = response.json()
+                    result_data = {
+                        "success": False,
+                        "blocked": False,
+                        **data,
+                    }
+                elif http_status == 422:
+                    result_data = {"success": True, "blocked": True}
+                else:
+                    result_data = {"success": False, "error": f"HTTP {http_status}"}
+ 
             else:
                 expected_http = int(
                     test_case.http_response
