@@ -9,15 +9,17 @@ from datetime import datetime
 from contracts.Input import TestCase
 from contracts.Output import TestResult
 
+
 def garantir_dir():
     script_dir = Path(__file__).parent
     data_path = script_dir / "data"
     results_path = script_dir / "results"
-    
+
     data_path.mkdir(parents=True, exist_ok=True)
     results_path.mkdir(parents=True, exist_ok=True)
-    
+
     return data_path, results_path
+
 
 class GuardrailTester:
     def __init__(self):
@@ -36,19 +38,14 @@ class GuardrailTester:
     def load_test_data(self):
         csv_files = {
             "benign_prompts.csv",
-            
             "jailbreak_attempts.csv",
             "jailbreak_attempts_safe.csv",
-            
             "malicious_prompts_safe.csv",
             "malicious_prompts.csv",
-            
             "pii_prompts_safe.csv",
             "pii_prompts.csv",
-            
             "biased_prompts_safe.csv",
             "biased_prompts.csv",
-
         }
 
         for csv_file in csv_files:
@@ -94,7 +91,7 @@ class GuardrailTester:
 
                 if response.status_code == 200:
                     data = response.json()
-                    actual_output = data.get("safe_output", '')
+                    actual_output = data.get("safe_output", "")
                     test_passed = actual_output == test_case.expected_outcome
                     result_data = {
                         "success": test_passed,
@@ -122,7 +119,8 @@ class GuardrailTester:
                 )
 
                 http_status = response.status_code
-                test_passed = http_status == test_case.http_response
+                expected_http = int(test_case.http_response or 422)
+                test_passed = http_status == expected_http
                 actual_outcome = str(http_status)
 
                 if http_status == 200:
@@ -136,12 +134,9 @@ class GuardrailTester:
                     result_data = {"success": True, "blocked": True}
                 else:
                     result_data = {"success": False, "error": f"HTTP {http_status}"}
- 
+
             else:
-                expected_http = int(
-                    test_case.http_response
-                    or (200 if test_case.category == "benign" else 422)
-                )
+
                 print(
                     f"\n[>>] Testando Orchestrator: {test_case.id}, Category: {test_case.category}"
                 )
@@ -152,6 +147,7 @@ class GuardrailTester:
                 )
 
                 http_status = response.status_code
+                expected_http = int(test_case.http_response or 200)
                 test_passed = http_status == expected_http
                 actual_outcome = str(http_status)
 
@@ -215,7 +211,7 @@ class GuardrailTester:
             output_path = script_dir / "results" / "test_results.csv"
         else:
             output_path = Path(output_path)
-        
+
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(output_path, "w", encoding="utf-8", newline="") as f:
@@ -268,4 +264,3 @@ class GuardrailTester:
 
         csv_path = self.generate_csv()
         print(f"[OK] Relatório CSV gerado em: {csv_path.absolute()}")
-
