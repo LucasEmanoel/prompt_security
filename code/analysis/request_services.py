@@ -36,10 +36,19 @@ class GuardrailTester:
     def load_test_data(self):
         csv_files = {
             "benign_prompts.csv",
+            
             "jailbreak_attempts.csv",
+            "jailbreak_attempts_safe.csv",
+            
+            "malicious_prompts_safe.csv",
             "malicious_prompts.csv",
+            
+            "pii_prompts_safe.csv",
             "pii_prompts.csv",
+            
+            "biased_prompts_safe.csv",
             "biased_prompts.csv",
+
         }
 
         for csv_file in csv_files:
