@@ -142,3 +142,33 @@ class MetricsCalculator:
             if cat:
                 categories.add(cat)
         return categories
+    
+    def generate_metrics_table(self) -> Dict:
+        """Gera uma tabela de métricas para plotagem.
+        
+        Returns:
+            Dict com estrutura de tabela: {
+                'columns': ['precision', 'recall', 'f1_score', 'accuracy', 'specificity', 'fpr', 'fnr'],
+                'rows': {
+                    'category_name': [valores],
+                    ...
+                }
+            }
+        """
+        analysis = self.analyze_by_category()
+        metrics = analysis['metrics']
+        
+        # Definir colunas de métricas
+        metric_columns = ['precision', 'recall', 'f1_score', 'accuracy', 'specificity', 'fpr', 'fnr']
+        
+        # Construir tabela
+        table_data = {}
+        for category in sorted(metrics.keys()):
+            category_metrics = metrics[category]
+            table_data[category] = [category_metrics.get(col, 0) for col in metric_columns]
+        
+        return {
+            'columns': metric_columns,
+            'rows': table_data,
+            'categories': sorted(table_data.keys())
+        }

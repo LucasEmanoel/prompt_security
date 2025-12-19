@@ -71,6 +71,9 @@ class GuardrailMetricsAnalyzer:
         print("\n[>>] Calculando métricas por categoria...")
         category_analysis = self.calculator.analyze_by_category()
         
+        print("\n[>>] Gerando tabela de métricas...")
+        self._generate_metrics_table(category_analysis)
+        
         print("\n[>>] Gerando graficos...")
         self._generate_charts(category_analysis)
         
@@ -95,4 +98,29 @@ class GuardrailMetricsAnalyzer:
         
         print("[>>] Plotando taxa de sucesso por categoria...")
         self.plot_generator.plot_success_rate_by_category(self.report_data)
+    
+    def _generate_metrics_table(self, category_analysis: Dict):
+        """Gera e exporta tabela de métricas em CSV."""
+        
+        table_data = self.calculator.generate_metrics_table()
+        
+        # Exportar em CSV
+        print("[>>] Exportando tabela de métricas em CSV...")
+        output_path = self.results_dir / "metricas_guardrails.csv"
+        
+        columns = table_data.get('columns', [])
+        rows = table_data.get('rows', {})
+        
+        with open(output_path, 'w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            
+            # Cabeçalho
+            writer.writerow(['Categoria'] + columns)
+            
+            # Linhas (categorias)
+            for category in sorted(rows.keys()):
+                values = rows[category]
+                writer.writerow([category] + values)
+        
+        print(f"[OK] CSV: {output_path}")
 
