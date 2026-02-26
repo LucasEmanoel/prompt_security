@@ -13,7 +13,7 @@ A arquitetura é composta pelas seguintes entidades:
   * **Usuário:** A entidade que envia o prompt inicial.
   * **Orquestrador:** O cérebro do sistema. Ele recebe o prompt do usuário, o encaminha para o `Sanitizador` para validação, envia o prompt limpo ao LLM e, por fim, passa a resposta do LLM para o `Output Guardrail` antes de devolvê-la ao usuário.
   * **Sanitizador (Sanitizer):** Um microsserviço responsável por analisar o prompt de entrada do usuário. Sua função é detectar e neutralizar potenciais ameaças, como injeções de prompt ou conteúdo malicioso.
-  * **Serviço de LLM:** O modelo de linguagem (ex: API da OpenAI) que recebe o prompt sanitizado e gera a resposta.
+  * **LLM:** O modelo de linguagem que recebe o prompt sanitizado e gera a resposta.
   * **Output Guardrail:** Um microsserviço que filtra a saída do LLM. Ele garante que a resposta gerada pelo modelo seja segura, apropriada e não contenha informações confidenciais antes de ser exibida ao usuário.
 
 -----
@@ -30,8 +30,11 @@ O projeto está organizado nas seguintes pastas principais:
 ├── 💻 code/
 │   ├── orchestrator/     (Microsserviço do Orquestrador) 
 │   ├── sanitizer/        (Microsserviço do Sanitizador) 
-│   └── guardrail/        (Microsserviço do Output Guardrail) 
-│
+│   └── guardrail/        (Microsserviço do Input Guardrail)
+|   └── bias_guardrail/   (Microsserviço do Bias Guardrail)
+|   └── output_guardrail/ (Microsserviço do Bias Guardrail)  
+|   └── streamlit_app/    (Interface para comunicação com o chat)
+|
 ├── 📊 activity/
 │   └── (Slides e materiais de apresentação do projeto)
 │
@@ -45,9 +48,9 @@ O projeto está organizado nas seguintes pastas principais:
 Este projeto foi construído utilizando as seguintes tecnologias:
 
   * **Linguagem:** Python 
-  * **Framework API:** FastAPI & Uvicorn 
+  * **Framework API:** FastAPI, Guardrail Ai & Uvicorn
+  * **Interface:** Streamlit
   * **Contêineres:** Docker 
-  * **LLM:** API da OpenAI 
   * **Diagramação:** Draw.io 
 
 -----
@@ -68,7 +71,14 @@ A arquitetura de microsserviços é gerenciada com Docker Compose, facilitando a
 4.  Isso iniciará os três serviços principais em contêineres separados, conforme definido no `docker-compose.yml`:
       * `sanitizer_service` (porta: 8000) 
       * `orchestrator_service` (porta: 7000) 
-      * `output_guardrail_service` (porta: 6000) 
+      * `guardrail_service` (porta: 6000)
+      * `bias_guardrail` (porta: 5000)
+      * `output_guardrail` (porta: 4000)
+      * `streamlit_service` (porta: 8501)
+5.  Abrir o navegador no seguinte endereço:
+    ```
+    http://localhost:8501
+    ```
 
 -----
 
