@@ -1,4 +1,3 @@
-import pytest
 from app.main import validate
 
 class TestCompleteWorkflow:

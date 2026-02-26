@@ -77,7 +77,7 @@ class GuardrailMetricsAnalyzer:
         print("\n[>>] Gerando graficos...")
         self._generate_charts(category_analysis)
         
-        print(f"\n[OK] Análise completa concluída!")
+        print("\n[OK] Análise completa concluída!")
         print(f"[OK] Resultados salvos em: {self.results_dir}")
     
     def _generate_charts(self, category_analysis: Dict):
